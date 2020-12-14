@@ -39,9 +39,27 @@ Airplane.prototype.land = function () {
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
-
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.stomach = [];
 }
+
+Person.prototype.eat = function (food) {
+  if (this.stomach.length >= 10) {
+    return;
+  } else {
+    this.stomach.push(food);
+  }
+};
+
+Person.prototype.poop = function () {
+  this.stomach = [];
+};
+
+Person.prototype.toString = function () {
+  return `${this.name}, ${this.age}`;
+};
 
 /*
   TASK 2
@@ -57,9 +75,27 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-
+function Car(model, milesPerGallon) {
+  this.model = model;
+  this.milesPerGallon = milesPerGallon;
+  this.tank = 0;
+  this.odometer = 0;
 }
+
+Car.prototype.fill = function (fuel) {
+  this.tank += fuel;
+};
+
+Car.prototype.drive = function (distance) {
+  if (distance / this.milesPerGallon > this.tank) {
+    this.odometer += this.tank * this.milesPerGallon;
+    this.tank = 0;
+    return `I ran out of fuel at ${this.odometer} miles!`;
+  } else {
+    this.tank -= distance / this.milesPerGallon;
+    this.odometer += distance;
+  }
+};
 
 /*
   TASK 3
@@ -68,18 +104,25 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
-
+function Baby(name, age, favoriteToy) {
+  Person.call(this, name, age);
+  this.favoriteToy = favoriteToy;
 }
+
+Baby.prototype = Object.create(Person.prototype);
+
+Baby.prototype.play = function () {
+  return `Playing with ${this.favoriteToy}`;
+};
 
 /* 
   TASK 4
 
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. The outer most use of the word this would reference the window object, if the 'use strict' rule is called it would return as undefined.
+  2. Implicit binding is the most typical way this is used and it is referencing the object that is placed before the dot in the call. So each time you create a new object you typically give it a variable name to reference it and then use dot followed by the key wanted.
+  3. Using a constructor function you bind the this to the object by using the new keyword before you invoke the constructor function saved to a variable for reference.
+  4. The final option is explicit binding which means that we explicately tell the item which this to use by utilizing the .call .apply or .bind methods the first two immediately invoke and the third does not.
 */
 
 
